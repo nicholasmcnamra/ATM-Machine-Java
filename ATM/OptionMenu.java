@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.InputMismatchException;
@@ -47,7 +48,9 @@ public class OptionMenu {
 				System.out.println("\nSelect the account you want to access: ");
 				System.out.println(" Type 1 - Checking Account");
 				System.out.println(" Type 2 - Savings Account");
-				System.out.println(" Type 3 - Exit");
+				System.out.println(" Type 3 - Investment Account");
+				System.out.println(" Type 4 - All Accounts");
+				System.out.println(" Type 5 - Exit");
 				System.out.print("\nChoice: ");
 
 				int selection = menuInput.nextInt();
@@ -60,6 +63,13 @@ public class OptionMenu {
 					getSaving(acc);
 					break;
 				case 3:
+//					getInvestment(acc);
+					break;
+				case 4:
+					System.out.println("\nChecking Account Balance: " + moneyFormat.format(acc.getCheckingBalance()));
+					System.out.println("\nSavings Account Balance: " + moneyFormat.format(acc.getSavingBalance()));
+					break;
+				case 4:
 					end = true;
 					break;
 				default:

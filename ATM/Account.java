@@ -1,6 +1,12 @@
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.util.Date;
 
 public class Account {
 	// variables
@@ -10,10 +16,30 @@ public class Account {
 	private double savingBalance = 0;
 	private double investmentBalance = 0;
 
-	Scanner input = new Scanner(System.in);
-	DecimalFormat moneyFormat = new DecimalFormat("'$'###,##0.00");
+	private Logger logger = Logger.getLogger("Activity Log");
 
-	public Account() {
+	Date date = new Date();
+
+	Scanner input = new Scanner(System.in);
+
+	DecimalFormat moneyFormat = new DecimalFormat("'$'###,##0.00");
+	SimpleFormatter logFormatter = new SimpleFormatter();
+	FileHandler fh;
+
+    {
+        try {
+            fh = new FileHandler("Account_Activity.txt", true);
+			logger.addHandler(fh);
+			logger.setLevel(Level.INFO);
+			fh.setFormatter(logFormatter);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+    public Account() {
 	}
 
 	public Account(int customerNumber, int pinNumber) {
@@ -21,7 +47,7 @@ public class Account {
 		this.pinNumber = pinNumber;
 	}
 
-	public Account(int customerNumber, int pinNumber, double checkingBalance, double savingBalance) {
+	public Account(int customerNumber, int pinNumber, double checkingBalance, double savingBalance, double investmentBalance) {
 		this.customerNumber = customerNumber;
 		this.pinNumber = pinNumber;
 		this.checkingBalance = checkingBalance;
@@ -117,6 +143,7 @@ public class Account {
 				double amount = input.nextDouble();
 				if ((checkingBalance - amount) >= 0 && amount >= 0) {
 					calcCheckingWithdraw(amount);
+					logger.log(Level.INFO, "Withdrew " + amount + " from checking on " + date);
 					System.out.println("\nCurrent Checking Account Balance: " + moneyFormat.format(checkingBalance));
 					end = true;
 				} else {
@@ -150,7 +177,7 @@ public class Account {
 		}
 	}
 
-	public void getInvestmentWithDrawInput() {
+	public void getInvestmentWithdrawInput() {
 		boolean end = false;
 		while(!end) {
 			try{
